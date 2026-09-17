@@ -1,3 +1,4 @@
+/*
 import { useState } from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
@@ -120,3 +121,15 @@ function App() {
 }
 
 export default App
+*/
+import { SimuladorCredito } from './components/SimuladorCredito';
+
+function App() {
+  return (
+    <main>
+      <SimuladorCredito />
+    </main>
+  );
+}
+
+export default App;
