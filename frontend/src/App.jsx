@@ -122,12 +122,31 @@ function App() {
 
 export default App
 */
+import { useState } from 'react';
 import { SimuladorCredito } from './components/SimuladorCredito';
+import { Login } from './components/Login';
 
 function App() {
+  // Estado para controlar si el usuario ya inicio sesion
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   return (
-    <main>
-      <SimuladorCredito />
+    <main style={{ padding: '20px' }}>
+      {!isAuthenticated ? (
+        <Login onLogin={setIsAuthenticated} />
+      ) : (
+        <>
+          <div style={{ textAlign: 'right', marginBottom: '20px' }}>
+            <button 
+              onClick={() => setIsAuthenticated(false)} 
+              style={{ padding: '8px 15px', backgroundColor: '#e74c3c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+            >
+              Cerrar Sesión
+            </button>
+          </div>
+          <SimuladorCredito />
+        </>
+      )}
     </main>
   );
 }
