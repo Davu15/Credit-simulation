@@ -1,0 +1,90 @@
+Listado de rutas de carpetas para el volumen Windows
+El número de serie del volumen es 9A42-7465
+C:.
+|   .gitignore
+|   estructura.txt
+|   estructura_actualizada.txt
+|   README.md
+|   
++---backend
+|   |   SimuladorCredito.slnx
+|   |   
+|   +---ApiGateway
+|   |   |   ApiGateway.csproj
+|   |   |   appsettings.Development.json
+|   |   |   appsettings.json
+|   |   |   Program.cs
+|   |   |   
+|   |   +---obj
+|   |   |       ApiGateway.csproj.nuget.dgspec.json
+|   |   |       ApiGateway.csproj.nuget.g.props
+|   |   |       ApiGateway.csproj.nuget.g.targets
+|   |   |       project.assets.json
+|   |   |       project.nuget.cache
+|   |   |       
+|   |   \---Properties
+|   |           launchSettings.json
+|   |           
+|   +---AuthService
+|   |   |   appsettings.json
+|   |   |   AuthService.csproj
+|   |   |   AuthService.http
+|   |   |   Program.cs
+|   |   |   
+|   |   +---Controllers
+|   |   |       AuthController.cs
+|   |   |       
+|   |   +---Data
+|   |   +---DTOs
+|   |   +---Models
+|   |   +---Properties
+|   |   |       launchSettings.json
+|   |   |       
+|   |   \---Services
+|   \---CreditService
+|       |   appsettings.json
+|       |   CreditService.csproj
+|       |   CreditService.http
+|       |   Program.cs
+|       |   
+|       +---Data
+|       +---DTOs
+|       +---Models
+|       +---Properties
+|       |       launchSettings.json
+|       |       
+|       \---Services
+|           \---AmortizationStrategy
+\---frontend
+    |   .gitignore
+    |   .oxlintrc.json
+    |   index.html
+    |   package-lock.json
+    |   package.json
+    |   README.md
+    |   vite.config.js
+    |   
+    +---public
+    |       favicon.svg
+    |       icons.svg
+    |       
+    \---src
+        |   App.css
+        |   App.jsx
+        |   index.css
+        |   main.jsx
+        |   
+        +---assets
+        |       hero.png
+        |       react.svg
+        |       vite.svg
+        |       
+        +---components
+        |       TablaAmortizacion.jsx
+        |       
+        +---context
+        +---pages
+        |       LoginPage.jsx
+        |       SimuladorPage.jsx
+        |       
+        \---services

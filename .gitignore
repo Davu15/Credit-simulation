@@ -10,3 +10,9 @@ dist/
 .vs/
 *.user
 appsettings.Development.json
+
+# Archivos de compilacion .NET
+bin/
+obj/
+.vs/
+*.user
