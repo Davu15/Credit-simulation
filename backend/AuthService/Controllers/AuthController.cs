@@ -1,66 +1,62 @@
+using Microsoft.AspNetCore.Mvc;
+using AuthService.Data;
+using AuthService.Models;
+using AuthService.DTOs;
+using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
-namespace AuthService.Controllers;
-
-[ApiController]
-[Route("api/[controller]")]
-public class AuthController : ControllerBase
+namespace AuthService.Controllers
 {
-    private readonly IConfiguration _configuration;
-
-    public AuthController(IConfiguration configuration)
+    [Route("api/auth")]
+    [ApiController]
+    public class AuthController : ControllerBase
     {
-        _configuration = configuration;
-    }
+        private readonly AuthDbContext _context;
+        private readonly IConfiguration _configuration;
 
-    [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginRequest request)
-    {
-        // Validación simulada (Aquí luego conectarás tu lógica de SQL Server)
-        if (request.Username != "admin" || request.Password != "12345")
+        public AuthController(AuthDbContext context, IConfiguration configuration)
         {
-            return Unauthorized(new { message = "Credenciales incorrectas" });
+            _context = context;
+            _configuration = configuration;
         }
 
-        // 1. Obtener la configuración de appsettings.json
-        var jwtSettings = _configuration.GetSection("JwtSettings");
-        var secretKey = jwtSettings.GetValue<string>("SecretKey");
-
-        // 2. Definir los "Claims" (información que viaja encriptada en el token)
-        var claims = new[]
+        [HttpPost("register")]
+        public IActionResult Register(UserDto request)
         {
-            new Claim(JwtRegisteredClaimNames.Sub, request.Username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-        };
+            if (_context.Users.Any(u => u.Username == request.Username))
+                return BadRequest("El usuario ya existe.");
 
-        // 3. Generar la firma del token con tu clave secreta
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var user = new User
+            {
+                Username = request.Username,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
+            };
 
-        // 4. Construir el token JWT
-        var token = new JwtSecurityToken(
-            issuer: jwtSettings.GetValue<string>("Issuer"),
-            audience: jwtSettings.GetValue<string>("Audience"),
-            claims: claims,
-            expires: DateTime.UtcNow.AddMinutes(jwtSettings.GetValue<int>("ExpiryMinutes")),
-            signingCredentials: creds
-        );
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            return Ok("Usuario registrado exitosamente.");
+        }
 
-        // 5. Retornar el token al cliente
-        return Ok(new
+        [HttpPost("login")]
+        public IActionResult Login(UserDto request)
         {
-            token = new JwtSecurityTokenHandler().WriteToken(token)
-        });
+            var user = _context.Users.FirstOrDefault(u => u.Username == request.Username);
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
+                return BadRequest("Credenciales incorrectas.");
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_configuration.GetSection("Jwt:Key").Value!);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim(ClaimTypes.Name, user.Username) }),
+                Expires = DateTime.UtcNow.AddHours(2),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+
+            return Ok(new { Token = tokenHandler.WriteToken(token) });
+        }
     }
-}
-
-// Estructura de los datos que el cliente (React) deberá enviar
-public class LoginRequest
-{
-    public string Username { get; set; } = string.Empty;
-    public string Password { get; set; } = string.Empty;
 }

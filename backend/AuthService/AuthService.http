@@ -1,6 +1,7 @@
-@AuthService_HostAddress = http://localhost:5119
+POST http://localhost:5001/api/auth/register
+Content-Type: application/json
 
-GET {{AuthService_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
+{
+  "username": "Sebastian",
+  "password": "MiPasswordSeguro123"
+}
