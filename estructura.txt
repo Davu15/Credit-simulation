@@ -1,0 +1,60 @@
+Listado de rutas de carpetas para el volumen Windows
+El número de serie del volumen es 9A42-7465
+C:.
+|   .gitignore
+|   estructura.txt
+|   README.md
+|   
++---backend
+|   |   SimuladorCredito.slnx
+|   |   
+|   +---AuthService
+|   |   |   appsettings.json
+|   |   |   AuthService.csproj
+|   |   |   AuthService.http
+|   |   |   Program.cs
+|   |   |   
+|   |   +---Controllers
+|   |   |       AuthController.cs
+|   |   |       
+|   |   \---Properties
+|   |           launchSettings.json
+|   |           
+|   \---CreditService
+|       |   appsettings.json
+|       |   CreditService.csproj
+|       |   CreditService.http
+|       |   Program.cs
+|       |   
+|       \---Properties
+|               launchSettings.json
+|               
+\---frontend
+    |   .gitignore
+    |   .oxlintrc.json
+    |   index.html
+    |   package-lock.json
+    |   package.json
+    |   README.md
+    |   vite.config.js
+    |   
+    +---public
+    |       favicon.svg
+    |       icons.svg
+    |       
+    \---src
+        |   App.css
+        |   App.jsx
+        |   index.css
+        |   main.jsx
+        |   
+        +---assets
+        |       hero.png
+        |       react.svg
+        |       vite.svg
+        |       
+        \---components
+                Login.jsx
+                SimuladorCredito.jsx
+                TablaAmortizacion.jsx
+                
