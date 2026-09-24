@@ -1,16 +1,15 @@
 import { useState } from 'react';
 import { Container, Row, Col, Form, Button } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 export default function LoginPage() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('admin');
+  const [password, setPassword] = useState('admin123');
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // Llamada al ApiGateway
       const response = await fetch('http://localhost:5000/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -18,16 +17,9 @@ export default function LoginPage() {
       });
 
       if (response.ok) {
-        // 1. Extraemos el cuerpo de la respuesta (donde viene el token)
         const data = await response.json(); 
-        
-        // 2. Lo mostramos en la consola para que puedas verlo
         console.log("¡Token recibido del backend! Aquí está:", data); 
-        
-        // 3. Lo guardamos en el almacenamiento del navegador para usarlo después
         localStorage.setItem('token', data.token); 
-
-        // 4. Viajamos al Dashboard
         navigate('/dashboard'); 
       } else { 
         alert("Credenciales incorrectas. Verifica tu usuario y contraseña.");
@@ -79,7 +71,7 @@ export default function LoginPage() {
                   <span className="input-group-text bg-transparent text-muted">👤</span>
                   <Form.Control 
                     type="text" 
-                    placeholder="Ingresa tu usuario" 
+                    placeholder="admin" 
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
@@ -114,7 +106,9 @@ export default function LoginPage() {
               </Button>
 
               <div className="text-center">
-                <a href="#" className="text-decoration-none small" style={{ color: '#0d6efd' }}>¿No tienes una cuenta? Regístrate</a>
+                <Link to="/register" className="text-decoration-none small" style={{ color: '#0d6efd' }}>
+                  ¿No tienes una cuenta? Regístrate
+                </Link>
               </div>
             </Form>
           </div>
