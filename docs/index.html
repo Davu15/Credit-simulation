@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Credit Simulation | David Rodríguez</title><meta name="description" content="Simulador interactivo de amortización francesa y alemana">
+<style>
+:root{color-scheme:dark;--bg:#0b1220;--panel:#141e30;--line:#2b3b54;--txt:#f1f6ff;--muted:#b6c8dd;--accent:#67e8cf}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#213d59,var(--bg) 50%);font:16px/1.55 system-ui,Arial,sans-serif;color:var(--txt)}a{color:var(--accent)}
+.wrap{max-width:1090px;margin:auto;padding:0 22px}header{border-bottom:1px solid var(--line);padding:20px 0}nav{display:flex;justify-content:space-between;gap:18px;flex-wrap:wrap}nav a{text-decoration:none}nav strong{letter-spacing:-.02em}
+.hero{padding:64px 0 36px}.kicker{color:var(--accent);font-weight:750;letter-spacing:.15em;font-size:.75rem;text-transform:uppercase}h1{font-size:clamp(2.4rem,6vw,4.4rem);line-height:1.1;letter-spacing:-.05em;margin:15px 0}h1 span{color:var(--accent)}.hero p{max-width:750px;color:var(--muted)}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:18px}.panel{border:1px solid var(--line);background:var(--panel);border-radius:16px;padding:25px}
+h2{margin:0 0 6px;font-size:1.32rem}.sub{color:var(--muted);font-size:.87rem}label{display:block;font-size:.88rem;font-weight:700;margin:18px 0 7px}input,select{width:100%;padding:12px;border-radius:8px;border:1px solid #40516a;background:#0d1728;color:var(--txt);font:inherit}input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+button{margin-top:22px;width:100%;background:var(--accent);color:#07231e;padding:12px;border-radius:9px;border:0;font:inherit;font-weight:750;cursor:pointer}
+.metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;margin:20px 0}.metric{border:1px solid var(--line);background:#0f1b2e;padding:17px;border-radius:12px}.metric small{display:block;color:var(--muted)}.metric strong{font-size:clamp(1.15rem,2.5vw,1.75rem);overflow-wrap:anywhere}.metric:first-child strong{color:var(--accent)}
+.notice{font-size:.83rem;color:var(--muted);margin-top:18px}.tablebox{overflow:auto;border:1px solid var(--line);border-radius:14px;margin-top:14px;max-height:510px}table{width:100%;border-collapse:collapse;text-align:right;white-space:nowrap;font-size:.85rem}td,th{padding:13px;border-bottom:1px solid var(--line)}th{background:#1b2a3f;position:sticky;top:0}th:first-child,td:first-child{text-align:left}footer{margin-top:60px;padding:25px 0;border-top:1px solid var(--line);color:var(--muted);font-size:.83rem}
+#error{color:#ffaaa1;margin-top:10px;font-size:.82rem}section.table{margin-top:32px}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.panel{padding:19px}.hero{padding-top:38px}.metrics{gap:8px}.metric{padding:12px}}
+</style></head><body>
+<header><nav class="wrap"><strong>Credit Simulation</strong><div><a href="https://davu15.github.io/">Portafolio personal</a> · <a href="https://github.com/Davu15/Credit-simulation">Código en GitHub</a></div></nav></header>
+<main class="wrap"><section class="hero"><div class="kicker">Demo interactiva · Proyecto académico</div><h1>Entiende tu crédito, <span>cuota por cuota.</span></h1><p>Simula préstamos con los métodos de amortización francés y alemán. Revisa cuotas, intereses, capital y saldo con una tabla mensual generada directamente en tu navegador.</p></section>
+<section class="layout"><form id="form" class="panel"><h2>Configura tu crédito</h2><div class="sub">Introduce los datos del préstamo.</div>
+<label for="capital">Capital (USD)</label><input type="number" id="capital" value="10000" min="100" max="100000000" step="100" required>
+<label for="tasa">Tasa anual (%)</label><input type="number" id="tasa" value="12" min="0" max="100" step=".1" required>
+<label for="meses">Plazo (meses)</label><input type="number" id="meses" value="24" min="1" max="360" step="1" required>
+<label for="metodo">Método</label><select id="metodo"><option value="frances">Francés — cuota constante</option><option value="aleman">Alemán — capital constante</option></select>
+<button type="submit">Calcular amortización</button><div id="error" role="alert"></div><p class="notice">Simulación educativa: no incluye seguros, impuestos ni comisiones. No constituye una oferta financiera.</p></form>
+<div class="panel"><h2>Resultados</h2><div class="sub" id="explanation">Cálculo local en el navegador.</div><div class="metrics">
+<div class="metric"><small id="cuotaLabel">Cuota mensual</small><strong id="cuota">—</strong></div><div class="metric"><small>Intereses totales</small><strong id="intereses">—</strong></div><div class="metric"><small>Total a pagar</small><strong id="total">—</strong></div><div class="metric"><small>Última cuota</small><strong id="ultima">—</strong></div>
+</div><p class="notice">Esta demostración es independiente del backend .NET del repositorio original y funciona con HTML, CSS y JavaScript.</p></div></section>
+<section class="table"><h2>Tabla de amortización</h2><p class="sub">Desglose de las cuotas y del saldo pendiente para cada mes.</p><div class="tablebox" tabindex="0"><table><thead><tr><th>Mes</th><th>Cuota</th><th>Capital</th><th>Interés</th><th>Saldo</th></tr></thead><tbody id="filas"></tbody></table></div></section>
+</main><footer><div class="wrap">David Rodríguez · Ingeniería de Software · <a href="https://davu15.github.io/">Ver portafolio</a> · <a href="https://github.com/Davu15/Credit-simulation">Repositorio Credit Simulation</a></div></footer>
+<script>
+const $=id=>document.getElementById(id), usd=n=>new Intl.NumberFormat('es-EC',{style:'currency',currency:'USD'}).format(Math.abs(n)<.005?0:n);
+function calcular(ev){if(ev)ev.preventDefault();
+let p=Number($('capital').value),t=Number($('tasa').value),n=Number($('meses').value),f=$('metodo').value==='frances';
+if(!(p>=100&&p<=100000000&&t>=0&&t<=100&&Number.isInteger(n)&&n>=1&&n<=360)){$('error').textContent='Introduce un capital, tasa y plazo válidos.';return;}
+$('error').textContent='';let r=t/1200,cuotaF=r===0?p/n:p*r/(1-Math.pow(1+r,-n)),saldo=p,total=0,interesTotal=0,primera=0,ultima=0,fragment=document.createDocumentFragment();
+for(let i=1;i<=n;i++){let interes=saldo*r,amort=f?cuotaF-interes:p/n;if(i===n)amort=saldo;let cuota=amort+interes;saldo=Math.max(0,saldo-amort);total+=cuota;interesTotal+=interes;if(i===1)primera=cuota;ultima=cuota;
+let tr=document.createElement('tr');[String(i),usd(cuota),usd(amort),usd(interes),usd(saldo)].forEach(v=>{let td=document.createElement('td');td.textContent=v;tr.appendChild(td)});fragment.appendChild(tr)}
+$('filas').replaceChildren(fragment);$('cuotaLabel').textContent=f?'Cuota mensual':'Primera cuota';$('cuota').textContent=usd(primera);$('intereses').textContent=usd(interesTotal);$('total').textContent=usd(total);$('ultima').textContent=usd(ultima);
+$('explanation').textContent=f?'Método francés: cuota aproximadamente constante; el peso de los intereses disminuye con el tiempo.':'Método alemán: amortización de capital constante; la cuota disminuye cada mes.';
+}
+$('form').addEventListener('submit',calcular);$('metodo').addEventListener('change',calcular);calcular();
+</script></body></html>
